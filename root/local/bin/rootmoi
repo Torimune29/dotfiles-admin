@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+sudo chezmoi --debug --config /etc/chezmoi/chezmoi.toml "$@"
