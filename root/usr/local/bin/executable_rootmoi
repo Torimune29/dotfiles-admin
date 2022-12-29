@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+
+CONFIG_PATH="/etc/chezmoi/chezmoi.config.toml"
+
+if [ "$(whoami)" = "root" ]; then
+  chezmoi --debug --config "$CONFIG_PATH" "$@"
+else
+  if command -v sudo; then
+    sudo -S -E chezmoi --debug --config "$CONFIG_PATH" "$@"
+  elif command -v su; then
+    su - -c chezmoi --debug --config "$CONFIG_PATH" "$@"
+  else
+    echo "Error: escalation command not found." 1>&2
+    return 1
+  fi
+fi
+
