@@ -8,12 +8,16 @@ if [ "$DAEMON_MANAGER" != "sysvinit-like" ]; then
   exit 0
 fi
 
-set -x
 file_tmp=$(mktemp)
 cat /dev/stdin \
-  | sed '/DOCKER_OPTS=/d'
+  | sed -e '/DOCKER_OPTS=/d' -e '/export HTTP_PROXY=/d' -e '/export HTTPS_PROXY=/d' -e '/export NO_PROXY=/d'
   > $file_tmp
 echo "DOCKER_OPTS=\"--config-file /etc/docker/daemon.json\"" >> $file_tmp
+{{ if .underProxy }}
+echo "export HTTP_PROXY={{ .proxyHttp }}" >> $file_tmp
+echo "export HTTPS_PROXY={{ .proxyHttps }}" >> $file_tmp
+echo "export NO_PROXY={{ .proxyNo }}" >> $file_tmp
+{{ end }}
 
 cat $file_tmp
 rm -rf $file_tmp

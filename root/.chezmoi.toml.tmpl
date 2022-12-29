@@ -1,6 +1,7 @@
 {{- $chezmoiForce := or (has "--force" .chezmoi.args) (has "--force=true" .chezmoi.args) -}}
 {{- $interactive := and stdinIsATTY (not $chezmoiForce) -}}
-{{- $promptSelector := "y/n" }}
+
+{{- $exitCode := 128 }}
 
 {{- $underProxy := false -}}
 {{- $proxyHttp := "" -}}
@@ -23,12 +24,13 @@
 {{-     if promptBool "Has No Proxy" false -}}
 {{-       $proxyNo    = promptString "Input No Proxy"     (cat "127.0.0.1" "localhost" .chezmoi.hostname | replace " " ",") -}}
 {{-     end }}
-{{-     writeToStdout (printf "Set as \n'http proxy:%s'\n'https proxy:%s'\n'ftp proxy:%s'\n'no proxy:%s'\n" $proxyHttp $proxyHttps $proxyFtp $proxyNo) -}}
-{{-     promptBool "OK" -}}
+{{-     writeToStdout (printf "Set proxy as \n'http proxy:%s'\n'https proxy:%s'\n'ftp proxy:%s'\n'no proxy:%s'\n" $proxyHttp $proxyHttps $proxyFtp $proxyNo) -}}
+{{-     if not (promptBool "OK" true) -}}
+{{-       writeToStdout (printf "Cancel.\n") -}}
+{{-       exit $exitCode -}}
+{{-     end -}}
 {{-   end -}}
 {{- end -}}
-
-
 
 sourceDir = "/etc/chezmoi/data"
 destDir = "/"
@@ -40,12 +42,12 @@ destDir = "/"
   publicDnsPrimary =  "1.1.1.1"
   publicDnsSecondary = "1.0.0.1"
 
-  {{- if $underProxy -}}
   # Proxy
-  underProxy = {{ $underProxy | quote  }}
-  proxyHttp = {{ $proxyHttp | quote  }}
-  proxyHttps = {{ $proxyHttps | quote  }}
-  proxyFtp = {{ $proxyFtp | quote  }}
-  proxyNo = {{ $proxyNo | quote  }}
-  {{- end }}
+  underProxy = {{ $underProxy }}
+  {{ if $underProxy -}}
+  proxyHttp = {{ $proxyHttp | quote }}
+  proxyHttps = {{ $proxyHttps | quote }}
+  proxyFtp = {{ $proxyFtp | quote }}
+  proxyNo = {{ $proxyNo | quote }}
+  {{ end }}
 

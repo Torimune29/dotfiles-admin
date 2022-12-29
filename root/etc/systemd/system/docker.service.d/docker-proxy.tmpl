@@ -1,0 +1,6 @@
+# see: https://docs.docker.jp/config/daemon/systemd.html#http-https
+{{ if .underProxy -}}
+HTTP_PROXY={{ .proxyHttp }}
+HTTPS_PROXY={{ .proxyHttps }}
+NO_PROXY={{ .proxyNo }}
+{{- end }}
