@@ -1,0 +1,8 @@
+{
+  "containerd": "/run/containerd/containerd.sock",
+  "debug": true,
+  "default-runtime": "runc",
+  "dns": ["$PUBLIC_DNS_PRIMARY", "$PUBLIC_DNS_SECONDARY"],
+  "features": {"buildkit": true},
+  "hosts": ["fd://", "unix:///var/run/docker.sock", "tcp://0.0.0.0:2375"]
+}
