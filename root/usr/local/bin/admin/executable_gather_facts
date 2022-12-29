@@ -1,0 +1,126 @@
+#!/usr/bin/env sh
+
+# arg:
+#  $1: if --variable, echo shell variables like: ESCALATION="sudo"; FETCH=~~~~.
+
+ESCALATION=""
+FETCH=""
+PACKAGE_MANAGER=""
+PACKAGE_INSTALL=""
+PACKAGE_UPDATE=""
+PACKAGE_INSTALL_FILE=""
+
+OS=""
+IS_WSL=false
+IS_DOCKER=false
+IS_DEVCONTAINER=false
+DAEMON_MANAGER=""
+IS_INTERACTIVE=false
+
+DIST_ID=""
+DIST_ID_LIKE=""
+DIST_VERSION_ID=""
+
+available() {
+  if [ "$(command -v ${1:?argument error})" ]; then
+    [ -z "$2" ] && return 0
+    "$@" > /dev/null 2>&1 && return 0
+  fi
+  return 1
+}
+
+output() {
+cat <<EOF
+ESCALATION="${ESCALATION}"
+FETCH="${FETCH}"
+PACKAGE_MANAGER="${PACKAGE_MANAGER}"
+PACKAGE_INSTALL="${PACKAGE_INSTALL}"
+PACKAGE_UPDATE="${PACKAGE_UPDATE}"
+PACKAGE_INSTALL_FILE="${PACKAGE_INSTALL_FILE}"
+OS="${OS}"
+IS_WSL=${IS_WSL}
+IS_DOCKER=${IS_DOCKER}
+IS_DEVCONTAINER=${IS_DEVCONTAINER}
+DAEMON_MANAGER="${DAEMON_MANAGER}"
+IS_INTERACTIVE=${IS_INTERACTIVE}
+DIST_ID="${DIST_ID}"
+DIST_ID_LIKE="${DIST_ID_LIKE}"
+DIST_VERSION_ID="${DIST_VERSION_ID}"
+EOF
+}
+
+# escalation
+if [ "$(whoami)" != "root" ]; then
+  if available sudo; then ESCALATION="sudo -S -E"
+  elif available su; then ESCALATION="su - -c"; fi
+fi
+
+# fetch
+if available curl; then FETCH="curl --silent --location --retry 3";
+elif available wget; then FETCH="wget --quiet --trust-server-names --tries=3 -O -"; fi
+
+# package manager
+if available apt-get; then
+  PACKAGE_MANAGER="apt"
+  PACKAGE_INSTALL="DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends"
+  PACKAGE_UPDATE="apt-get update"
+  PACKAGE_INSTALL_FILE="DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends"
+elif available yum; then
+  PACKAGE_MANAGER="yum"
+  PACKAGE_INSTALL="yum install -y"
+  PACKAGE_UPDATE="yum check-update"
+  PACKAGE_INSTALL_FILE=""
+elif available dnf; then
+  PACKAGE_MANAGER="dnf"
+  PACKAGE_INSTALL="dnf install -y"
+  PACKAGE_UPDATE="dnf check-update"
+  PACKAGE_INSTALL_FILE=""
+elif available microdnf; then
+  PACKAGE_MANAGER="microdnf"
+  PACKAGE_INSTALL="microdnf install -y"
+  PACKAGE_UPDATE="microdnf update"
+  PACKAGE_INSTALL_FILE=""
+elif available zypper; then
+  PACKAGE_MANAGER="zypper"
+  PACKAGE_INSTALL="zypper install -y"
+  PACKAGE_UPDATE="zypper refresh"
+  PACKAGE_INSTALL_FILE=""
+elif available apk; then
+  PACKAGE_MANAGER="apk"
+  PACKAGE_INSTALL="apk add --no-cache"
+  PACKAGE_UPDATE="apk update"
+  PACKAGE_INSTALL_FILE=""
+else
+  PACKAGE_MANAGER=""
+  PACKAGE_INSTALL=""
+  PACKAGE_UPDATE=""
+  PACKAGE_INSTALL_FILE=""
+fi
+
+# system
+case "$(uname -s)" in
+  Linux) OS="Linux" ;;
+  Darwin) OS="Mac" ;;
+  CYGWIN*|MINGW32*|MSYS*|MINGW*) OS="Windows" ;;
+  *) OS="" ;;
+esac
+[ -f /proc/sys/fs/binfmt_misc/WSLInterop ] && IS_WSL=true
+[ -n "${REMOTE_CONTAINERS}" ] && IS_DEVCONTAINER=true
+[ -f /.dockerenv ] && IS_DOCKER=true
+case "$(cat /proc/1/comm 2>/dev/null)" in
+  systemd) DAEMON_MANAGER="systemd";;
+  init) DAEMON_MANAGER="sysvinit-like" ;;
+  *) DAEMON_MANAGER="";;
+esac
+[ -t 0 ] && IS_INTERACTIVE=true
+
+# distribution
+DIST_ID=$(cat /etc/os-release | awk "/^ID=/" | tr -d "ID=" | tr -d \")
+DIST_ID_LIKE=$(cat /etc/os-release | awk "/^ID_LIKE=/" | tr -d "ID_LIKE=" | tr -d \")
+DIST_VERSION_ID=$(cat /etc/os-release | awk "/^VERSION_ID=/" | tr -d "VERSION_ID=" | tr -d \")
+
+if [ "$1" = "--variable" ]; then
+  output | tr '\n' ';'
+else
+  output
+fi

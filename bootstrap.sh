@@ -32,7 +32,7 @@ echo "prerequisite package instal finished."
 echo "init scripts start"
 
 # apply dotfiles using chezmoi
-sh -c "$(curl -fsLSk https://chezmoi.io/get)" -- init --apply --debug --destination / --source /etc/chezmoi/data --purge-binary https://github.com/Torimune29/dotfiles-admin.git
+sh -c "$(curl -fsLSk https://chezmoi.io/get)" -- init --apply --destination / --source /etc/chezmoi/data --purge-binary https://github.com/Torimune29/dotfiles-admin.git
 
 echo "init script finished"
 echo "[bootstrap finished]"

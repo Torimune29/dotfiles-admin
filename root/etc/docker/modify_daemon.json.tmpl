@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -euo pipefail
+
+jq=(jq --raw-output)
+json=$(cat /dev/stdin)
+
+if [ -z "${json}" ]; then
+  json='{}'
+fi
+
+# container runtime
+json=$("${jq[@]}" '.containerd = "/run/containerd/containerd.sock"' <<<"${json}")
+json=$("${jq[@]}" '.default-runtime = "runc"' <<<"${json}")
+# features
+json=$("${jq[@]}" '.features.buildkit = true' <<<"${json}")
+# dns
+json=$("${jq[@]}" '.dns = ["{{ .publicDnsPrimary }}", "{{ .publicDnsSecondary }}" ]' <<<"${json}")
+# hosts
+json=$("${jq[@]}" '.hosts = ["fd://", "unix:///var/run/docker.sock", "tcp://0.0.0.0:2375"]' <<<"${json}")
+# other
+json=$("${jq[@]}" '.debug = true' <<<"${json}")
+
+
+echo -n "${json}"
