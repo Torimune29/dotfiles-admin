@@ -1,0 +1,46 @@
+name: bootstrap
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  native:
+    runs-on: ${{ matrix.distro }}
+    strategy:
+      matrix:
+        distro:
+        - ubuntu-latest
+        - ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - name: Run Test
+        run: |
+          curl --silent https://raw.githubusercontent.com/Torimune29/dotfiles-admin/main/bootstrap.sh | sh
+
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        docker:
+        - "ubuntu:latest"
+        - "ubuntu:14.04"
+        - "almalinux:latest"
+        - "debian:stable-slim"
+        - "public.ecr.aws/amazonlinux/amazonlinux:latest"
+        - "mcr.microsoft.com/vscode/devcontainers/base:latest"
+        - "alpine:latest"
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Run Test
+        uses: addnab/docker-run-action@v3
+        with:
+          image: ${{ matrix.docker }}
+          options: |
+            -v ${{ github.workspace }}:/tmp/project
+          shell: sh
+          run: /tmp/project/bootstrap.sh

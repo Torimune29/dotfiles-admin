@@ -26,7 +26,7 @@ echo "prerequisite package instal start"
 # install packages for chezmoi
 eval $(get_package_management_method)
 eval $(get_escalation_method) $_facts_update 1>/dev/null
-eval $(get_escalation_method) $_facts_install git curl tar bash 1>/dev/null
+eval $(get_escalation_method) $_facts_install git curl tar 1>/dev/null
 
 echo "prerequisite package instal finished."
 echo "init scripts start"
