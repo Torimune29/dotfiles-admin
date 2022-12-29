@@ -2,15 +2,18 @@
 
 set -euo pipefail
 
-eval $(admin/gather_facts --variable)
+eval $(gather_facts --variable)
 
 if [ "$DAEMON_MANAGER" != "sysvinit-like" ]; then
-  return 0
+  exit 0
 fi
 
-file=$(cat /dev/stdin)
+set -x
+file_tmp=$(mktemp)
+cat /dev/stdin \
+  | sed '/DOCKER_OPTS=/d'
+  > $file_tmp
+echo "DOCKER_OPTS=\"--config-file /etc/docker/daemon.json\"" >> $file_tmp
 
-file=$(echo $file | sed "/DOCKER_OPTS=/Id" | true)
-file+="\nDOCKER_OPTS=\"--config-file /etc/docker/daemon.json\"\n"
-
-echo -n "${file}"
+cat $file_tmp
+rm -rf $file_tmp

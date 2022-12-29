@@ -1,3 +1,19 @@
+{{- $chezmoiForce := or (has "--force" .chezmoi.args) (has "--force=true" .chezmoi.args) -}}
+{{- $interactive := and stdinIsATTY (not $chezmoiForce) -}}
+
+{{-  $proxyHttp := quote -}}
+{{-  $proxyHttps := quote -}}
+{{-  $proxyFtp := quote -}}
+{{-  $proxyNo := quote -}}
+{{- if $interactive -}}
+{{-  $proxyHttp = promptString "Input HTTP Proxy" "http://username:password@domain:port" -}}
+{{-  $proxyHttps = promptString "Input HTTPS Proxy" "http://username:password@domain:port" -}}
+{{-  $proxyFtp = promptString "Input FTP Proxy" "ftp://username:password@domain:port" -}}
+{{-  $proxyNo = promptString "Input HTTP Proxy" "http://username:password@domain:port" -}}
+{{- end -}}
+
+
+
 sourceDir = "/etc/chezmoi/data"
 destDir = "/"
 
@@ -7,3 +23,9 @@ destDir = "/"
   #    2022/12 cloudflare
   publicDnsPrimary =  "1.1.1.1"
   publicDnsSecondary = "1.0.0.1"
+
+  # Proxy
+  proxyHttp = {{ $proxyHttp | quote  }}
+  proxyHttps = {{ $proxyHttps | quote  }}
+  proxyFtp = {{ $proxyFtp | quote  }}
+  proxyNo = {{ $proxyNo | quote  }}
