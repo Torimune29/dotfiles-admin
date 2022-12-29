@@ -1,15 +1,31 @@
 {{- $chezmoiForce := or (has "--force" .chezmoi.args) (has "--force=true" .chezmoi.args) -}}
 {{- $interactive := and stdinIsATTY (not $chezmoiForce) -}}
+{{- $promptSelector := "y/n" }}
 
-{{-  $proxyHttp := quote -}}
-{{-  $proxyHttps := quote -}}
-{{-  $proxyFtp := quote -}}
-{{-  $proxyNo := quote -}}
+{{- $underProxy := false -}}
+{{- $proxyHttp := "" -}}
+{{- $proxyHttps := "" -}}
+{{- $proxyFtp := "" -}}
+{{- $proxyNo := "" -}}
+
 {{- if $interactive -}}
-{{-  $proxyHttp = promptString "Input HTTP Proxy" "http://username:password@domain:port" -}}
-{{-  $proxyHttps = promptString "Input HTTPS Proxy" "http://username:password@domain:port" -}}
-{{-  $proxyFtp = promptString "Input FTP Proxy" "ftp://username:password@domain:port" -}}
-{{-  $proxyNo = promptString "Input HTTP Proxy" "http://username:password@domain:port" -}}
+{{-   $underProxy = promptBool "Under Proxy" $underProxy -}}
+{{-   if $underProxy -}}
+{{-     if promptBool "Has HTTP Proxy" false -}}
+{{-       $proxyHttp  = promptString "Input HTTP Proxy"   "http://username:password@domain:port" -}}
+{{-     end }}
+{{-     if promptBool "Has HTTPS Proxy" false -}}
+{{-       $proxyHttps = promptString "Input HTTPS Proxy"  "http://username:password@domain:port" -}}
+{{-     end }}
+{{-     if promptBool "Has FTP Proxy" false -}}
+{{-       $proxyFtp   = promptString "Input FTP Proxy"    "ftp://username:password@domain:port" -}}
+{{-     end }}
+{{-     if promptBool "Has No Proxy" false -}}
+{{-       $proxyNo    = promptString "Input No Proxy"     (cat "127.0.0.1" "localhost" .chezmoi.hostname | replace " " ",") -}}
+{{-     end }}
+{{-     writeToStdout (printf "Set as \n'http proxy:%s'\n'https proxy:%s'\n'ftp proxy:%s'\n'no proxy:%s'\n" $proxyHttp $proxyHttps $proxyFtp $proxyNo) -}}
+{{-     promptBool "OK" -}}
+{{-   end -}}
 {{- end -}}
 
 
@@ -24,9 +40,12 @@ destDir = "/"
   publicDnsPrimary =  "1.1.1.1"
   publicDnsSecondary = "1.0.0.1"
 
+  {{- if $underProxy -}}
   # Proxy
+  underProxy = {{ $underProxy | quote  }}
   proxyHttp = {{ $proxyHttp | quote  }}
   proxyHttps = {{ $proxyHttps | quote  }}
   proxyFtp = {{ $proxyFtp | quote  }}
   proxyNo = {{ $proxyNo | quote  }}
+  {{- end }}
 
