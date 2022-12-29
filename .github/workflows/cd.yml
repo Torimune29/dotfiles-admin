@@ -1,0 +1,30 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+    workflow_dispatch:
+
+jobs:
+  document:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+      - name: Generate
+        run: |
+          npx embedme "docs/**.md" "*.md" --source-root .
+          git config --local user.email ""41898282+github-actions[bot]@users.noreply.github.com""
+          git config --local user.name "github-actions[bot]"
+          (git add . && git commit -m "chore:🤖 generate docs") || true
+      - name: Push
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GP_TOKEN }}
+          branch: ${{ github.ref }}
+
+
+

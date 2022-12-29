@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    workflow_dispatch:
+
+
+jobs:
+  static-analysis:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+      # coding style
+      - uses: editorconfig-checker/action-editorconfig-checker@main
+      - run: editorconfig-checker

@@ -1,0 +1,14 @@
+*
+!.*
+!.gitignore
+!.gitattributes
+
+!docs/
+!src/
+!tests/
+!tools/
+
+!package.json
+
+!*.md
+!LICENSE

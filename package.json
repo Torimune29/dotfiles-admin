@@ -1,0 +1,24 @@
+{
+  "version": "0.0.3",
+  "scripts": {
+    "prepare": "husky install",
+    "initrepo": "rm -rf CHANGELOG.md && sed -i -e \"/\\\"version\\\":/Id\" package.json && npm init -y",
+    "release:first": "standard-version --first-release --no-verify",
+    "release:patch": "standard-version --release-as patch --no-verify",
+    "release:minor": "standard-version --release-as minor --no-verify",
+    "release:major": "standard-version --release-as major --no-verify"
+  },
+  "devDependencies": {
+    "editorconfig-checker": "^4.0.2",
+    "git-cz": "^4.9.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "markdownlint-cli2": "^0.5.1",
+    "standard-version": "^9.5.0"
+  },
+  "lint-staged": {
+    "*.*": [
+      "editorconfig-checker"
+    ]
+  }
+}
