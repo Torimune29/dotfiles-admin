@@ -1,0 +1,5 @@
+["usr/local/bin/jq"]
+type = "file"
+executable = true
+url = "https://github.com/stedolan/jq/releases/latest/download/jq-linux64"
+
