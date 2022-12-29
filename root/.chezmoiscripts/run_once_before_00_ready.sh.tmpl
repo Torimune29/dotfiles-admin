@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+
+set -eu
+
+{{ $update := .update }}
+{{ $install := .install }}
+{{ $installAmazonLinuxExtras := "amazon-linux-extras install" }}
+{{ template "sudo" $update }}
+{{ template "sudo" $install }}
+{{ template "sudo" $installAmazonLinuxExtras }}
+
+{{ $update }}
+
+{{ if eq "amzn" .distId }}
+{{   cat $installAmazonLinuxExtras "epel" }}
+{{ else if or (contains "centos" .distId) (contains "fedora" .distId) }}
+{{   cat $install "epel-release" }}
+{{ end -}}
+

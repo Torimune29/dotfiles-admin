@@ -2,11 +2,7 @@
 
 set -euo pipefail
 
-eval $(gather_facts --variable)
-
-if [ "$DAEMON_MANAGER" != "sysvinit-like" ]; then
-  exit 0
-fi
+{{ if and .requestDocker (eq .daemonManager "sysvinit-like") }}
 
 file_tmp=$(mktemp)
 cat /dev/stdin \
@@ -21,3 +17,5 @@ echo "export NO_PROXY={{ .proxyNo }}" >> $file_tmp
 
 cat $file_tmp
 rm -rf $file_tmp
+
+{{ end }}

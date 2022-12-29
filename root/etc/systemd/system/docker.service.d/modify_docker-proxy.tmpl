@@ -1,6 +1,12 @@
+#!/bin/bash
+
+set -euo pipefail
+
 # see: https://docs.docker.jp/config/daemon/systemd.html#http-https
-{{ if .underProxy -}}
+{{ if and .requestDocker (eq .daemonManager "systemd") .underProxy }}
+cat <<EOF
 HTTP_PROXY={{ .proxyHttp }}
 HTTPS_PROXY={{ .proxyHttps }}
 NO_PROXY={{ .proxyNo }}
-{{- end }}
+EOF
+{{ end }}

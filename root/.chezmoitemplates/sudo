@@ -1,0 +1,8 @@
+{{ $command := . }}
+{{ if eq (env "USER") "root" | not }}
+{{   if lookPath "sudo" | not | not }}
+{{     $command := cat "sudo -S -E" $command }}
+{{   else if lookPath "su" | not | not }}
+{{     $command := cat "su - -C" $command }}
+{{   end }}
+{{ end }}

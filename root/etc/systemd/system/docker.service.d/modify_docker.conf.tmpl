@@ -1,4 +1,12 @@
+#!/bin/bash
+
+set -euo pipefail
+
+{{ if and .requestDocker (eq .daemonManager "systemd") }}
+cat <<EOF
 [Service]
 EnvironmentFile=-/etc/systemd/system/docker.service.d/docker-proxy
 ExecStart=
 ExecStart=/usr/bin/dockerd --config-file /etc/docker/daemon.json
+EOF
+{{ end }}

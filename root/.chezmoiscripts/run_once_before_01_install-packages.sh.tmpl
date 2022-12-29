@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+set -eu
+
+{{ $install := .install }}
+{{ template "sudo" $update }}
+{{ template "sudo" $install }}
+
+{{ cat $install .requestPackages }}

@@ -3,6 +3,12 @@
 
 {{- $exitCode := 128 }}
 
+{{- $installPackages := "git libarchive-tools curl" -}}
+
+{{- $installDocker := false -}}
+{{- $installSshDaemon := false -}}
+{{- $clean := false -}}
+
 {{- $underProxy := false -}}
 {{- $proxyHttp := "" -}}
 {{- $proxyHttps := "" -}}
@@ -10,6 +16,16 @@
 {{- $proxyNo := "" -}}
 
 {{- if $interactive -}}
+{{-   $installDocker = promptBool "Install dockerd" $installDocker -}}
+{{-   if $installDocker -}}
+{{-     $installPackages = cat $installPackages "passwd" -}}
+{{-   end -}}
+
+{{-   $installSshDaemon = promptBool "Install sshd" $installSshDaemon -}}
+{{-   if $installSshDaemon -}}
+{{-     $installPackages = cat $installPackages "sshd" -}}
+{{-   end -}}
+
 {{-   $underProxy = promptBool "Under Proxy" $underProxy -}}
 {{-   if $underProxy -}}
 {{-     if promptBool "Has HTTP Proxy" false -}}
@@ -30,6 +46,7 @@
 {{-       exit $exitCode -}}
 {{-     end -}}
 {{-   end -}}
+
 {{- end -}}
 
 sourceDir = "/etc/chezmoi/data"
@@ -49,5 +66,44 @@ destDir = "/"
   proxyHttps = {{ $proxyHttps | quote }}
   proxyFtp = {{ $proxyFtp | quote }}
   proxyNo = {{ $proxyNo | quote }}
-  {{ end }}
+  {{ end -}}
 
+  # system facts
+  distId = {{ .chezmoi.osRelease.id | quote }}
+  distVersionId = {{ .chezmoi.osRelease.versionID | quote }}
+  isWsl = {{ stat "/proc/sys/fs/binfmt_misc/WSLInterop" | not | not }}
+  isDocker = {{ stat "/.dockerenv" | not | not }}
+  isDevcontainer = {{ env "REMOTE_CONTAINERS" | not | not }}
+
+  {{ $initProcess:= output "cat" "/proc/1/comm" | trim -}}
+  {{ if eq $initProcess "systemd" -}}
+  daemonManager = "systemd"
+  {{ else if eq $initProcess "init" -}}
+  daemonManager = "sysvinit-like"
+  {{ else -}}
+  daemonManager = ""
+  {{ end -}}
+
+  {{ if lookPath "apt-get" | not | not -}}
+  install = "DEBCONF_NOWARNINGS=yes DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends"
+  update = "apt-get update"
+  {{ else if lookPath "yum" | not | not -}}
+  install = "yum install -y"
+  update = "yum check-update"
+  {{ else if lookPath "dnf" | not | not -}}
+  install = "dnf install -y"
+  update = "dnf check-update"
+  {{ else if lookPath "microdnf" | not | not -}}
+  install = "microdnf install -y"
+  update = "microdnf update"
+  {{ else if lookPath "zyper" | not | not -}}
+  install = "zypper install -y"
+  update = "zypper refresh"
+  {{ else if lookPath "apk" | not | not -}}
+  install = "apk add --no-cache"
+  update = "apk update"
+  {{ end -}}
+
+  # request facts
+  requestPackages = {{ $installPackages | quote }}
+  requestDocker = {{ $installDocker }}
