@@ -17,14 +17,7 @@
 
 {{- if $interactive -}}
 {{-   $installDocker = promptBool "Install dockerd" $installDocker -}}
-{{-   if $installDocker -}}
-{{-     $installPackages = cat $installPackages "passwd" -}}
-{{-   end -}}
-
 {{-   $installSshDaemon = promptBool "Install sshd" $installSshDaemon -}}
-{{-   if $installSshDaemon -}}
-{{-     $installPackages = cat $installPackages "sshd" -}}
-{{-   end -}}
 
 {{-   $underProxy = promptBool "Under Proxy" $underProxy -}}
 {{-   if $underProxy -}}
@@ -89,7 +82,7 @@ destDir = "/"
   update = "apt-get update"
   {{ else if lookPath "yum" | not | not -}}
   install = "yum install -y"
-  update = "yum check-update"
+  update = "yum check-update | true"  # returns 100. see: https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/security_guide/chap-keeping_your_system_up-to-date#sec-Using_the_Security_Features_of_Yum
   {{ else if lookPath "dnf" | not | not -}}
   install = "dnf install -y"
   update = "dnf check-update"
@@ -105,5 +98,11 @@ destDir = "/"
   {{ end -}}
 
   # request facts
+  {{ if $installDocker -}}
+  {{   $installPackages = cat $installPackages "passwd" -}}
+  {{ end -}}
+  {{ if $installSshDaemon -}}
+  {{   $installPackages = cat $installPackages "openssh-server" -}}
+  {{ end -}}
   requestPackages = {{ $installPackages | quote }}
   requestDocker = {{ $installDocker }}

@@ -9,9 +9,6 @@ curl -fsSL https://get.docker.com -o $TMPFILE
 sh $TMPFILE
 rm $TMPFILE
 
-{{ $addUserInDockerGroup := "gpasswd -a $USER docker" }}
-{{ template "sudo" $addUserInDockerGroup }}
-
-{{ $addUserInDockerGroup }}
+{{ template "sudo" "gpasswd -a $USER docker"  }}
 
 {{ end }}

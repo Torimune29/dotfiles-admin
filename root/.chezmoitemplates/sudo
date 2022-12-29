@@ -6,3 +6,4 @@
 {{     $command := cat "su - -C" $command }}
 {{   end }}
 {{ end }}
+{{ $command }}
