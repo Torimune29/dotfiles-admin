@@ -44,4 +44,4 @@ jobs:
           options: |
             -v ${{ github.workspace }}:/tmp/project
           shell: sh
-          run: /tmp/project/bootstrap.sh --purge --purge-binary
+          run: /tmp/project/bootstrap.sh
