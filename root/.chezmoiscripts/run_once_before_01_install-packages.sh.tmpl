@@ -2,5 +2,20 @@
 
 set -eu
 
-{{ template "sudo" .update }}
-{{ template "sudo" cat .install .requestPackages }}
+{{- /* for   bsdtar           gpg   */ -}}
+{{- $repositorySpecific := dict
+  "apt"     "libarchive-tools gpg   "
+  "yum"     "bsdtar           gnupg2"
+  "dnf"     "bsdtar           gnupg "
+  "zypper"  "bsdtar           gpg2  "
+  "apk"     "libarchive-tools gnupg "
+-}}
+
+{{- $requestPackages := cat
+  "git"
+  "curl"
+  "ca-certificates"
+  (get $repositorySpecific .packageManager)
+-}}
+
+{{ template "sudo" cat .install $requestPackages }}

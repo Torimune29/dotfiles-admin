@@ -3,7 +3,6 @@
 
 {{- $exitCode := 128 }}
 
-{{- $installPackages := "git libarchive-tools curl" -}}
 
 {{- $installDocker := false -}}
 {{- $installSshDaemon := false -}}
@@ -78,31 +77,30 @@ destDir = "/"
   {{ end -}}
 
   {{ if lookPath "apt-get" | not | not -}}
+  packageManager = "apt"
   install = "DEBCONF_NOWARNINGS=yes DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends"
   update = "apt-get update"
   {{ else if lookPath "yum" | not | not -}}
+  packageManager = "yum"
   install = "yum install -y"
   update = "yum check-update | true"  # returns 100. see: https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/security_guide/chap-keeping_your_system_up-to-date#sec-Using_the_Security_Features_of_Yum
   {{ else if lookPath "dnf" | not | not -}}
+  packageManager = "dnf"
   install = "dnf install -y"
   update = "dnf check-update"
   {{ else if lookPath "microdnf" | not | not -}}
+  packageManager = "dnf"
   install = "microdnf install -y"
   update = "microdnf update"
-  {{ else if lookPath "zyper" | not | not -}}
+  {{ else if lookPath "zypper" | not | not -}}
+  packageManager = "zypper"
   install = "zypper install -y"
   update = "zypper refresh"
   {{ else if lookPath "apk" | not | not -}}
+  packageManager = "apk"
   install = "apk add --no-cache"
   update = "apk update"
   {{ end -}}
 
   # request facts
-  {{ if $installDocker -}}
-  {{   $installPackages = cat $installPackages "passwd" -}}
-  {{ end -}}
-  {{ if $installSshDaemon -}}
-  {{   $installPackages = cat $installPackages "openssh-server" -}}
-  {{ end -}}
-  requestPackages = {{ $installPackages | quote }}
   requestDocker = {{ $installDocker }}
