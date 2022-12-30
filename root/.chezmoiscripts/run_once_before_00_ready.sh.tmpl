@@ -6,7 +6,11 @@ set -eu
 
 {{ if eq "amzn" .distId }}
 {{   template "sudo" "amazon-linux-extras install -y epel"  }}
-{{ else if or (contains "centos" .distId) (contains "fedora" .distId) }}
+{{ else if or
+  (contains "centos" .distId)
+  (contains "almalinux" .distId)
+  (contains "rocky" .distId)
+  (contains "fedora" .distId) }}
 {{   template "sudo" cat .install "epel-release" }}
 {{ end -}}
 
