@@ -6,3 +6,9 @@ echo <string>
 # sample echo yes or no
 echo <yesno>
 $ yesno: echo 'yes no what?' | tr ' ' '\n'
+
+# test docker
+dr -v $(pwd):/etc/chezmoi/data <image>:<tag> /bin/<shell>
+
+# copy execute chezmoi
+echo "/etc/chezmoi/data/bin/chezmoi init --apply --destination / --source /etc/chezmoi/data --config-path /etc/chezmoi/chezmoi.config.toml" | pbcopy
