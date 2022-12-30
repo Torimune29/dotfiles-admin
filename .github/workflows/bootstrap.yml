@@ -18,8 +18,7 @@ jobs:
     steps:
       - name: Run Test
         run: |
-          curl --silent https://raw.githubusercontent.com/Torimune29/dotfiles-admin/main/bootstrap.sh
-          sudo sh bootstrap.sh --force --purge --purge-binary
+          curl --silent https://raw.githubusercontent.com/Torimune29/dotfiles-admin/main/bootstrap.sh | sudo sh
 
   docker:
     runs-on: ubuntu-latest
@@ -45,4 +44,4 @@ jobs:
           options: |
             -v ${{ github.workspace }}:/tmp/project
           shell: sh
-          run: /tmp/project/bootstrap.sh --force --purge --purge-binary
+          run: /tmp/project/bootstrap.sh --purge --purge-binary

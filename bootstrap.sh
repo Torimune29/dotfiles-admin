@@ -11,7 +11,7 @@ get_escalation_method() {
 
 get_package_management_method () {
   if [ -x "$(command -v apt-get)" ];    then  echo "_facts_manager=\"apt\";       _facts_install=\"DEBIAN_FRONTEND=noninteractive apt-get install -y\";     _facts_update=\"apt-get update\" "
-  elif [ -x "$(command -v yum)" ];      then  echo "_facts_manager=\"yum\";       _facts_install=\"yum install -y\";         _facts_update=\"yum check-update\" "
+  elif [ -x "$(command -v yum)" ];      then  echo "_facts_manager=\"yum\";       _facts_install=\"yum install -y\";         _facts_update=\"yum check-update | true\" "
   elif [ -x "$(command -v dnf)" ];      then  echo "_facts_manager=\"dnf\";       _facts_install=\"dnf install -y\";         _facts_update=\"dnf check-update\" "
   elif [ -x "$(command -v microdnf)" ]; then  echo "_facts_manager=\"microdnf\";  _facts_install=\"microdnf install -y\";    _facts_update=\"microdnf update\" "
   elif [ -x "$(command -v zypper)" ];   then  echo "_facts_manager=\"zypper\"     _facts_install=\"zypper install -y\";      _facts_update=\"zypper refresh\" "
