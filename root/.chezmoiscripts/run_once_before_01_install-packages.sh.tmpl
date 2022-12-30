@@ -4,11 +4,11 @@ set -eu
 
 {{- /* for   bsdtar           gpg   */ -}}
 {{- $repositorySpecific := dict
-  "apt"     "libarchive-tools gpg   "
+  "apt"     "libarchive-tools gnupg2"
   "yum"     "bsdtar           gnupg2"
-  "dnf"     "bsdtar           gnupg "
-  "zypper"  "bsdtar           gpg2  "
-  "apk"     "libarchive-tools gnupg "
+  "dnf"     "bsdtar           gnupg2"
+  "zypper"  "bsdtar           gpg2"
+  "apk"     "libarchive-tools gnupg"
 -}}
 
 {{- $requestPackages := cat
