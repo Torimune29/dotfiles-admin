@@ -1,0 +1,30 @@
+#!/bin/sh
+
+set -eu
+
+file_tmp=$(mktemp)
+cat /dev/stdin \
+  | sed \
+  -e "/http_proxy/d" -e "/HTTP_PROXY/d" \
+  -e "/https_proxy/d" -e "/HTTPS_PROXY/d" \
+  -e "/ftp_proxy/d" -e "/FTP_PROXY/d" \
+  -e "/no_proxy/d" -e "/NO_PROXY/d" \
+  -e "/ELECTRON_GET_USE_PROXY/d" \
+  > $file_tmp
+
+{{ if .underProxy }}
+cat <<EOF >> $file_tmp
+http_proxy={{ .proxyHttp }}
+HTTP_PROXY={{ .proxyHttp }}
+https_proxy={{ .proxyHttps }}
+HTTPS_PROXY={{ .proxyHttps }}
+ftp_proxy={{ .proxyFtp }}
+FIP_PROXY={{ .proxyFtp }}
+no_proxy={{ .proxyNo }}
+NO_PROXY={{ .proxyNo }}
+ELECTRON_GET_USE_PROXY=true
+EOF
+{{ end }}
+
+cat $file_tmp
+rm -rf $file_tmp

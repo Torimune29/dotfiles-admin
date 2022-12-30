@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+
+set -eu
+
+{{ if .requestDevelopmentEssentials }}
+
+{{- $repositorySpecific := dict
+  "apt"     (cat "build-essential")
+  "yum"     (cat "")
+  "dnf"     (cat "")
+  "zypper"  (cat "")
+  "apk"     (cat "build-base")
+-}}
+
+{{- $requestPackages := cat
+  "python3"
+  (get $repositorySpecific .packageManager)
+-}}
+
+{{ template "sudo" cat .install $requestPackages }}
+curl -sL https://bootstrap.pypa.io/get-pip.py | python3
+python3 -m pip install --force \
+  setuptools
+
+{{ end }}

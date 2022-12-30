@@ -1,13 +1,16 @@
+
+{{- /* chezmoi */ -}}
 {{- $chezmoiForce := or (has "--force" .chezmoi.args) (has "--force=true" .chezmoi.args) -}}
 {{- $interactive := and stdinIsATTY (not $chezmoiForce) -}}
 
 {{- $exitCode := 128 }}
 
-
+{{- /* User request */ -}}
 {{- $installDocker := false -}}
-{{- $installSshDaemon := false -}}
+{{- $installDevelopmentEssentials := false -}}
 {{- $clean := false -}}
 
+{{- /* Proxy */ -}}
 {{- $underProxy := false -}}
 {{- $proxyHttp := "" -}}
 {{- $proxyHttps := "" -}}
@@ -16,7 +19,7 @@
 
 {{- if $interactive -}}
 {{-   $installDocker = promptBool "Install dockerd" $installDocker -}}
-{{-   $installSshDaemon = promptBool "Install sshd" $installSshDaemon -}}
+{{-   $installDevelopmentEssentials = promptBool "Install development essentials" $installDevelopmentEssentials -}}
 
 {{-   $underProxy = promptBool "Under Proxy" $underProxy -}}
 {{-   if $underProxy -}}
@@ -104,3 +107,4 @@ destDir = "/"
 
   # request facts
   requestDocker = {{ $installDocker }}
+  requestDevelopmentEssentials = {{ $installDevelopmentEssentials }}
