@@ -107,4 +107,5 @@ destDir = "/"
 
   # request facts
   requestDocker = {{ $installDocker }}
+  requestInteractiveEssentials = {{ or $installDevelopmentEssentials }}
   requestDevelopmentEssentials = {{ $installDevelopmentEssentials }}

@@ -2,24 +2,22 @@
 
 set -eu
 
-{{ if .requestDevelopmentEssentials }}
+{{ if .requestInteractiveEssentials }}
 
 {{- $repositorySpecific := dict
-  "apt"     (cat "build-essential")
+  "apt"     (cat "")
   "yum"     (cat "")
   "dnf"     (cat "")
   "zypper"  (cat "")
-  "apk"     (cat "build-base")
+  "apk"     (cat "")
 -}}
 
 {{- $requestPackages := cat
-  "python3"
+  "bash"
+  "procps"
   (get $repositorySpecific .packageManager)
 -}}
 
 {{ template "sudo" cat .install $requestPackages }}
-curl -sL https://bootstrap.pypa.io/get-pip.py | python3
-python3 -m pip install --force \
-  setuptools
 
 {{ end }}

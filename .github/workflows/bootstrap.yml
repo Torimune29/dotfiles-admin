@@ -45,25 +45,3 @@ jobs:
             -v ${{ github.workspace }}:/tmp/project
           shell: sh
           run: /tmp/project/bootstrap.sh
-  docker-devenv:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    strategy:
-      matrix:
-        docker:
-        - "ubuntu:latest"
-        - "ubuntu:14.04"
-        - "debian:stable-slim"
-        - "mcr.microsoft.com/vscode/devcontainers/base:latest"
-        - "alpine:latest"
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-      - name: Run Test
-        uses: addnab/docker-run-action@v3
-        with:
-          image: ${{ matrix.docker }}
-          options: |
-            -v ${{ github.workspace }}:/tmp/project
-          shell: sh
-          run: /tmp/project/bootstrap.sh --promptBool "Install development essentials"=true
