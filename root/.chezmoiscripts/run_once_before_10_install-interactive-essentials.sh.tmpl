@@ -4,12 +4,22 @@ set -eu
 
 {{ if .requestInteractiveEssentials }}
 
+{{- /* old ubuntu bsdtar support. see: https://github.com/intel/lkp-tests/issues/50#issue-537649184 */ -}}
+{{- $aptbsdtar := "libarchive-tools" -}}
+{{- if and
+  (contains "ubuntu" .distId )
+  (gt 0 (semver "18" | (semver .distVersionId).Compare))
+}}
+{{-   $aptbsdtar = "bsdtar" -}}
+{{- end -}}
+
+{{- /* for        bsdtar            gpg   */ -}}
 {{- $repositorySpecific := dict
-  "apt"     (cat "")
-  "yum"     (cat "")
-  "dnf"     (cat "")
-  "zypper"  (cat "")
-  "apk"     (cat "")
+  "apt"     (cat $aptbsdtar         "gnupg2")
+  "yum"     (cat "bsdtar"           "gnupg2")
+  "dnf"     (cat "bsdtar"           "gnupg2")
+  "zypper"  (cat "bsdtar"           "gpg2")
+  "apk"     (cat "libarchive-tools" "gnupg")
 -}}
 
 {{- $requestPackages := cat
