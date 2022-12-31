@@ -18,9 +18,9 @@ jobs:
     steps:
       - name: Run Test
         run: |
-          curl --silent https://raw.githubusercontent.com/Torimune29/dotfiles-admin/main/bootstrap.sh | sudo sh
+          curl --silent https://raw.githubusercontent.com/Torimune29/dotfiles-admin/main/bootstrap.sh | sudo sh -- --force
 
-  docker-minimal:
+  docker:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
@@ -34,14 +34,31 @@ jobs:
         - "public.ecr.aws/amazonlinux/amazonlinux:latest"
         - "mcr.microsoft.com/vscode/devcontainers/base:latest"
         - "alpine:latest"
+        - "archlinux:latest"
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
-      - name: Run Test
+      - name: Run Test minimal
         uses: addnab/docker-run-action@v3
         with:
           image: ${{ matrix.docker }}
           options: |
             -v ${{ github.workspace }}:/tmp/project
           shell: sh
-          run: /tmp/project/bootstrap.sh
+          run: /tmp/project/bootstrap.sh --force
+      - name: Run Test 1
+        uses: addnab/docker-run-action@v3
+        with:
+          image: ${{ matrix.docker }}
+          options: |
+            -v ${{ github.workspace }}:/tmp/project
+          shell: sh
+          run: |
+            /tmp/project/bootstrap.sh \
+              --promptBool "Install development essentials"=true
+              --promptBool "Install server essentials"=true
+              --promptString "Admin User Name"=admin
+              --promptString "Admin User Password"=password
+              --promptString "Admin Group"=testgroup
+              --promptBool "Install dockerd"=false
+              --promptBool "Under Proxy"=false

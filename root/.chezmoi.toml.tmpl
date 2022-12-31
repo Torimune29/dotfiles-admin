@@ -1,14 +1,15 @@
 
 {{- /* chezmoi */ -}}
 {{- $chezmoiForce := or (has "--force" .chezmoi.args) (has "--force=true" .chezmoi.args) -}}
-{{- $interactive := and stdinIsATTY (not $chezmoiForce) -}}
+{{- /* $interactive := and stdinIsATTY (not $chezmoiForce) */ -}}
+{{-  $interactive := (not $chezmoiForce) -}}
 
 {{- $exitCode := 128 }}
 
 {{- /* User request */ -}}
-{{- $installDocker := false -}}
 {{- $installDevelopmentEssentials := false -}}
 {{- $installServerEssentials := false -}}
+{{- $installDocker := false -}}
 {{- $adminUserName := "admin" -}}
 {{- $adminPassword := randAscii 12 -}}
 {{- $adminGroup := "wheel" -}}
@@ -23,7 +24,6 @@
 {{- $proxyNo := "" -}}
 
 {{- if $interactive -}}
-{{-   $installDocker = promptBool "Install dockerd" $installDocker -}}
 {{-   $installDevelopmentEssentials = promptBool "Install development essentials" $installDevelopmentEssentials -}}
 
 {{-   $installServerEssentials = promptBool "Install server essentials" $installServerEssentials -}}
@@ -32,11 +32,9 @@
 {{-     $adminPassword = promptString "Admin User Password" $adminPassword -}}
 {{-     $adminGroup = promptString "Admin Group" $adminGroup -}}
 {{-     writeToStdout (printf "Set Admin Info as \n'Admin User Name:%s'\n'Admin Password:%s'\n'Admin Group:%s'\n'" $adminUserName $adminPassword $adminGroup) -}}
-{{-     if not (promptBool "OK" true) -}}
-{{-       writeToStdout (printf "Cancel.\n") -}}
-{{-       exit $exitCode -}}
-{{-     end -}}
 {{-   end -}}
+
+{{-   $installDocker = promptBool "Install dockerd" $installDocker -}}
 
 {{-   $underProxy = promptBool "Under Proxy" $underProxy -}}
 {{-   if $underProxy -}}
@@ -53,10 +51,6 @@
 {{-       $proxyNo    = promptString "Input No Proxy"     (cat "127.0.0.1" "localhost" .chezmoi.hostname | replace " " ",") -}}
 {{-     end }}
 {{-     writeToStdout (printf "Set proxy as \n'http proxy:%s'\n'https proxy:%s'\n'ftp proxy:%s'\n'no proxy:%s'\n" $proxyHttp $proxyHttps $proxyFtp $proxyNo) -}}
-{{-     if not (promptBool "OK" true) -}}
-{{-       writeToStdout (printf "Cancel.\n") -}}
-{{-       exit $exitCode -}}
-{{-     end -}}
 {{-   end -}}
 
 {{- end -}}

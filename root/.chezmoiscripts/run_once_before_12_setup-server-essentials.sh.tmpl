@@ -5,11 +5,11 @@ set -eu
 {{ if .requestServerEssentials }}
 
 {{- $repositorySpecific := dict
-  "apt"     (cat "openssh-server passwd         adduser")
-  "yum"     (cat "openssh-server passwd         adduser")
-  "dnf"     (cat "openssh-server shadow-utils-2 adduser")
-  "zypper"  (cat "openssh        passwd         adduser")
-  "apk"     (cat "openssh-server shadow")
+  "apt"     (cat "openssh-server adduser")
+  "yum"     (cat "openssh-server adduser")
+  "dnf"     (cat "openssh-server adduser")
+  "zypper"  (cat "openssh        adduser")
+  "apk"     (cat "openssh-server ")
 -}}
 
 {{- $requestPackages := cat
