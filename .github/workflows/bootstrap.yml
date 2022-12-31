@@ -51,6 +51,7 @@ jobs:
         with:
           image: ${{ matrix.docker }}
           options: |
+            -it 
             -v ${{ github.workspace }}:/tmp/project
           shell: sh
           run: |
