@@ -27,7 +27,7 @@ addgroup {{ .requestServerAdminGroup }}
 # no gecos is default
 adduser -D -s $(which bash) -G {{ .requestServerAdminGroup }} {{ .requestServerAdminUserName }}
 {{ else }}
-adduser  --disabled-password --gecos --shell $(which bash) --ingroup {{ .requestServerAdminGroup }} {{ .requestServerAdminUserName }}
+adduser --disabled-password --gecos "" --shell $(which bash) --ingroup {{ .requestServerAdminGroup }} {{ .requestServerAdminUserName }}
 {{ end }}
 echo "{{ .requestServerAdminUserName }}:{{ .requestServerAdminPassword }}" | chpasswd
 
