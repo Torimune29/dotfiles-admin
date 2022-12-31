@@ -3,20 +3,9 @@
 set -eu
 
 {{ if .requestDevelopmentEssentials }}
-
-{{- $repositorySpecific := dict
-  "apt"     (cat "build-essential")
-  "yum"     (cat "")
-  "dnf"     (cat "")
-  "zypper"  (cat "")
-  "apk"     (cat "build-base")
--}}
-
-{{- $requestPackages := cat
-  "python3"
-  (get $repositorySpecific .packageManager)
--}}
-
-{{ template "sudo" cat .install $requestPackages }}
+{{ if not eq "alpine" .distId }}
+# homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+{{ end }}
 
 {{ end }}

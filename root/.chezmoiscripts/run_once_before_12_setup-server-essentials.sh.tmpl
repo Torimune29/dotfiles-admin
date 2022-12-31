@@ -20,21 +20,21 @@ set -eu
 {{ template "sudo" cat .install $requestPackages }}
 
 # add admin user
-userdel -r {{ .requestServerAdminUserName }} | true
-groupdel {{ .requestServerAdminGroup }} | true
-groupadd {{ .requestServerAdminGroup }}
-useradd -s /bin/bash -g {{ .requestServerAdminGroup }} {{ .requestServerAdminUserName }}
-echo "{{ .requestServerAdminUserName }}:{{ .requestServerAdminPassword }}" | chpasswd
+sudo userdel -r {{ .requestServerAdminUserName }} | true
+sudo groupdel {{ .requestServerAdminGroup }} | true
+sudo groupadd {{ .requestServerAdminGroup }}
+sudo useradd -s /bin/bash -g {{ .requestServerAdminGroup }} {{ .requestServerAdminUserName }}
+echo "{{ .requestServerAdminUserName }}:{{ .requestServerAdminPassword }}" | sudo chpasswd
 
 # set sudoers
-mkdir -p /etc/sudoers.d
-cat <<EOF > /etc/sudoers.d/{{ .requestServerAdminGroup }}
+sudo mkdir -p /etc/sudoers.d
+sudo tee /etc/sudoers.d/{{ .requestServerAdminGroup }} <<EOF >/dev/null
 %{{ .requestServerAdminGroup }} ALL=(ALL) ALL
 %{{ .requestServerAdminGroup }} ALL=(ALL) NOPASSWD: ALL
 
 Defaults:%{{ .requestServerAdminGroup }} !requiretty
 Defaults:%{{ .requestServerAdminGroup }} env_keep += SSH_AUTH_SOCK
 EOF
-chmod 0440 /etc/sudoers.d/{{ .requestServerAdminGroup }}
+sudo chmod 0440 /etc/sudoers.d/{{ .requestServerAdminGroup }}
 
 {{ end }}
