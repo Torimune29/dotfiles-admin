@@ -24,6 +24,7 @@ set -eu
 
 {{- $requestPackages := cat
   "bash"
+  "bash-completion"
   "procps"
   (get $repositorySpecific .packageManager)
 -}}

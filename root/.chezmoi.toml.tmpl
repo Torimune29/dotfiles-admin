@@ -8,6 +8,11 @@
 {{- /* User request */ -}}
 {{- $installDocker := false -}}
 {{- $installDevelopmentEssentials := false -}}
+{{- $installServerEssentials := false -}}
+{{- $adminUserName := "admin" -}}
+{{- $adminPassword := randAscii 12 -}}
+{{- $adminGroup := "wheel" -}}
+
 {{- $clean := false -}}
 
 {{- /* Proxy */ -}}
@@ -20,6 +25,18 @@
 {{- if $interactive -}}
 {{-   $installDocker = promptBool "Install dockerd" $installDocker -}}
 {{-   $installDevelopmentEssentials = promptBool "Install development essentials" $installDevelopmentEssentials -}}
+
+{{-   $installServerEssentials = promptBool "Install server essentials" $installServerEssentials -}}
+{{-   if $installServerEssentials -}}
+{{-     $adminUserName = promptString "Admin User Name" $adminUserName -}}
+{{-     $adminPassword = promptString "Admin User Password" $adminPassword -}}
+{{-     $adminGroup = promptString "Admin Group" $adminGroup -}}
+{{-     writeToStdout (printf "Set Admin Info as \n'Admin User Name:%s'\n'Admin Password:%s'\n'Admin Group:%s'\n'" $adminUserName $adminPassword $adminGroup) -}}
+{{-     if not (promptBool "OK" true) -}}
+{{-       writeToStdout (printf "Cancel.\n") -}}
+{{-       exit $exitCode -}}
+{{-     end -}}
+{{-   end -}}
 
 {{-   $underProxy = promptBool "Under Proxy" $underProxy -}}
 {{-   if $underProxy -}}
@@ -107,5 +124,10 @@ destDir = "/"
 
   # request facts
   requestDocker = {{ $installDocker }}
-  requestInteractiveEssentials = {{ or $installDevelopmentEssentials }}
+  requestInteractiveEssentials = {{ or $installDevelopmentEssentials $installServerEssentials }}
   requestDevelopmentEssentials = {{ $installDevelopmentEssentials }}
+
+  requestServerEssentials = {{ $installServerEssentials }}
+  requestServerAdminUserName = {{ $adminUserName | quote }}
+  requestServerAdminPassword = {{ $adminPassword | quote }}
+  requestServerAdminGroup = {{ $adminGroup | quote }}
