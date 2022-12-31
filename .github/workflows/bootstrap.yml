@@ -45,7 +45,7 @@ jobs:
           options: |
             -v ${{ github.workspace }}:/tmp/project
           shell: sh
-          run: /tmp/project/bootstrap.sh --force
+          run: /tmp/project/bootstrap.sh --no-tty --force
       - name: Run Test 1
         uses: addnab/docker-run-action@v3
         with:
@@ -54,7 +54,7 @@ jobs:
             -v ${{ github.workspace }}:/tmp/project
           shell: sh
           run: |
-            /tmp/project/bootstrap.sh \
+            /tmp/project/bootstrap.sh --no-tty \
               --promptBool "Install development essentials"=true
               --promptBool "Install server essentials"=true
               --promptString "Admin User Name"=admin

@@ -1,8 +1,7 @@
 
 {{- /* chezmoi */ -}}
 {{- $chezmoiForce := or (has "--force" .chezmoi.args) (has "--force=true" .chezmoi.args) -}}
-{{- /* $interactive := and stdinIsATTY (not $chezmoiForce) */ -}}
-{{-  $interactive := (not $chezmoiForce) -}}
+{{- $interactive := and stdinIsATTY (not $chezmoiForce) -}}
 
 {{- $exitCode := 128 }}
 
