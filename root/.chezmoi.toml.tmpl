@@ -115,6 +115,10 @@ destDir = "/"
   packageManager = "zypper"
   install = "zypper install -y"
   update = "zypper refresh"
+  {{ else if lookPath "apk" | not | not -}}
+  packageManager = "apk"
+  install = "apk add --no-cache"
+  update = "apk update"
   {{ else if lookPath "pacman" | not | not -}}
   packageManager = "pacman"
   install = "pacman -S"
