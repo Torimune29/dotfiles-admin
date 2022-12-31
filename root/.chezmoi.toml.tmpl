@@ -2,7 +2,7 @@
 {{- /* chezmoi */ -}}
 {{- $chezmoiForce := or (has "--force" .chezmoi.args) (has "--force=true" .chezmoi.args) -}}
 {{- $chezmoiSetNoTTY := has "--no-tty" .chezmoi.args -}}
-{{- $interactive := and (not $chezmoiForce) $chezmoiSetNoTTY -}}
+{{- $interactive := and (not $chezmoiForce) (or stdinIsATTY $chezmoiSetNoTTY) -}}
 
 {{- $exitCode := 128 }}
 
@@ -11,7 +11,7 @@
 {{- $installServerEssentials := false -}}
 {{- $installDocker := false -}}
 {{- $adminUserName := "admin" -}}
-{{- $adminPassword := randAscii 12 -}}
+{{- $adminPassword := randAlphaNum 12 -}}
 {{- $adminGroup := "wheel" -}}
 
 {{- $clean := false -}}
@@ -76,6 +76,11 @@ destDir = "/"
 
   # system facts
   distId = {{ .chezmoi.osRelease.id | quote }}
+  {{ if hasKey .chezmoi.osRelease "idLike" -}}
+  distIdLike = {{ .chezmoi.osRelease.idLike | quote }}
+  {{ else -}}
+  distIdLike = ""
+  {{ end -}}
   distVersionId = {{ .chezmoi.osRelease.versionID | quote }}
   isWsl = {{ stat "/proc/sys/fs/binfmt_misc/WSLInterop" | not | not }}
   isDocker = {{ stat "/.dockerenv" | not | not }}
@@ -110,10 +115,10 @@ destDir = "/"
   packageManager = "zypper"
   install = "zypper install -y"
   update = "zypper refresh"
-  {{ else if lookPath "apk" | not | not -}}
-  packageManager = "apk"
-  install = "apk add --no-cache"
-  update = "apk update"
+  {{ else if lookPath "pacman" | not | not -}}
+  packageManager = "pacman"
+  install = "pacman -S"
+  update = "pacman -gSyy"
   {{ end -}}
 
   # request facts

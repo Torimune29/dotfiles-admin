@@ -5,11 +5,11 @@ set -eu
 {{ if .requestServerEssentials }}
 
 {{- $repositorySpecific := dict
-  "apt"     (cat "openssh-server adduser")
-  "yum"     (cat "openssh-server adduser")
-  "dnf"     (cat "openssh-server adduser")
-  "zypper"  (cat "openssh        adduser")
-  "apk"     (cat "openssh-server ")
+  "apt"     (cat "openssh-server passwd")
+  "yum"     (cat "openssh-server passwd")
+  "dnf"     (cat "openssh-server passwd")
+  "zypper"  (cat "openssh        passwd")
+  "apk"     (cat "openssh-server shadow")
 -}}
 
 {{- $requestPackages := cat
@@ -20,15 +20,10 @@ set -eu
 {{ template "sudo" cat .install $requestPackages }}
 
 # add admin user
-deluser --remove-home {{ .requestServerAdminUserName }} | true
-delgroup {{ .requestServerAdminGroup }} | true
-addgroup {{ .requestServerAdminGroup }}
-{{ if eq "alpine" .distId }}
-# no gecos is default
-adduser -D -s $(which bash) -G {{ .requestServerAdminGroup }} {{ .requestServerAdminUserName }}
-{{ else }}
-adduser --disabled-password --gecos "" --shell $(which bash) --ingroup {{ .requestServerAdminGroup }} {{ .requestServerAdminUserName }}
-{{ end }}
+userdel -r {{ .requestServerAdminUserName }} | true
+groupdel {{ .requestServerAdminGroup }} | true
+groupadd {{ .requestServerAdminGroup }}
+useradd -s /bin/bash -g {{ .requestServerAdminGroup }} {{ .requestServerAdminUserName }}
 echo "{{ .requestServerAdminUserName }}:{{ .requestServerAdminPassword }}" | chpasswd
 
 # set sudoers
