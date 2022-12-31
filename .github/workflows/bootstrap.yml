@@ -27,7 +27,7 @@ jobs:
       matrix:
         docker:
         - "ubuntu:latest"
-        - "ubuntu:14.04"
+        # - "ubuntu:14.04"
         - "almalinux:minimal"
         - "almalinux:latest"
         - "debian:stable-slim"

@@ -4,6 +4,7 @@ set -eu
 
 {{ if .requestDevelopmentEssentials }}
 {{ if or
+  (contains "debian" .distId)
   (contains "debian" .distIdLike)
   (contains "rhel" .distIdLike) }}
 # homebrew
