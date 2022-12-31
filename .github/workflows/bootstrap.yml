@@ -34,7 +34,7 @@ jobs:
         - "public.ecr.aws/amazonlinux/amazonlinux:latest"
         - "mcr.microsoft.com/vscode/devcontainers/base:latest"
         - "alpine:latest"
-        - "archlinux:latest"
+        # - "archlinux:latest"
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
