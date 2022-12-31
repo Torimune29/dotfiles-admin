@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Run Test
         run: |
-          curl --silent https://raw.githubusercontent.com/Torimune29/dotfiles-admin/main/bootstrap.sh | sudo sh -- --force
+          curl --silent https://raw.githubusercontent.com/Torimune29/dotfiles-admin/main/bootstrap.sh | sudo sh
 
   docker:
     runs-on: ubuntu-latest
@@ -45,7 +45,7 @@ jobs:
           options: |
             -v ${{ github.workspace }}:/tmp/project
           shell: sh
-          run: /tmp/project/bootstrap.sh --no-tty --force
+          run: /tmp/project/bootstrap.sh --force
       - name: Run Test 1
         uses: addnab/docker-run-action@v3
         with:
@@ -54,4 +54,4 @@ jobs:
             -v ${{ github.workspace }}:/tmp/project
           shell: sh
           run: |
-            /tmp/project/bootstrap.sh --no-tty --promptBool "Install development essentials"=true --promptBool "Install server essentials"=true --promptString "Admin User Name"=admin --promptString "Admin User Password"=password --promptString "Admin Group"=testgroup --promptBool "Install dockerd"=false --promptBool "Under Proxy"=false
+            /tmp/project/bootstrap.sh --promptBool "Install development essentials"=true --promptBool "Install server essentials"=true --promptString "Admin User Name"=admin --promptString "Admin User Password"=password --promptString "Admin Group"=testgroup --promptBool "Install dockerd"=false --promptBool "Under Proxy"=false
