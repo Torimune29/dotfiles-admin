@@ -24,9 +24,10 @@ deluser --remove-home {{ .requestServerAdminUserName }} | true
 delgroup {{ .requestServerAdminGroup }} | true
 addgroup {{ .requestServerAdminGroup }}
 {{ if eq "alpine" .distId }}
-adduser -s $(which bash) -G {{ .requestServerAdminGroup }} {{ .requestServerAdminUserName }}
+# no gecos is default
+adduser -D -s $(which bash) -G {{ .requestServerAdminGroup }} {{ .requestServerAdminUserName }}
 {{ else }}
-adduser --shell $(which bash) --ingroup {{ .requestServerAdminGroup }} {{ .requestServerAdminUserName }}
+adduser  --disabled-password --gecos --shell $(which bash) --ingroup {{ .requestServerAdminGroup }} {{ .requestServerAdminUserName }}
 {{ end }}
 echo "{{ .requestServerAdminUserName }}:{{ .requestServerAdminPassword }}" | chpasswd
 
