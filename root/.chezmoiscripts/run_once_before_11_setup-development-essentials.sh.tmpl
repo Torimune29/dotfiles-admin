@@ -3,7 +3,9 @@
 set -eu
 
 {{ if .requestDevelopmentEssentials }}
-{{ if not eq "alpine" .distId }}
+{{ if or
+  (contains "debian" .distIdLike)
+  (contains "rhel" .distIdLike) }}
 # homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 {{ end }}
