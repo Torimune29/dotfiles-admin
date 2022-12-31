@@ -1,7 +1,8 @@
 
 {{- /* chezmoi */ -}}
 {{- $chezmoiForce := or (has "--force" .chezmoi.args) (has "--force=true" .chezmoi.args) -}}
-{{- $interactive := and stdinIsATTY (not $chezmoiForce) -}}
+{{- $chezmoiSetNoTTY := has "--no-tty" .chezmoi.args -}}
+{{- $interactive := and (not $chezmoiForce) $chezmoiSetNoTTY -}}
 
 {{- $exitCode := 128 }}
 
