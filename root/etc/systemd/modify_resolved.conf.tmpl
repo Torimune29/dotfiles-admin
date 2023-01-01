@@ -2,7 +2,9 @@
 
 set -eu
 
-{{ if eq .daemonManager "systemd" }}
+{{ if or
+  (eq .daemonManager "systemd")
+  .isWSL }}
 
 file_tmp=$(mktemp)
 cat /dev/stdin \
