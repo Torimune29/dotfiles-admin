@@ -35,10 +35,7 @@ echo "init scripts start"
 sudo sh -c "$(curl -fsLSk https://chezmoi.io/get)" -- init --apply --destination / --source /etc/chezmoi/data --config-path /etc/chezmoi/chezmoi.config.toml "$@" https://github.com/Torimune29/dotfiles-admin.git
 
 # nixpkg
-NIXINSTALLER=$(mktemp)
-curl -L -o $NIXINSTALLER https://nixos.org/nix/install
-sh $NIXINSTALLER --daemon
-rm $NIXINSTALLER
+sh <(curl -L -o $NIXINSTALLER https://nixos.org/nix/install) --daemon
 
 echo "init script finished"
 echo "[bootstrap finished]"
