@@ -3,8 +3,8 @@
 set -eu
 
 {{ if and
-  not (eq .daemonManager "systemd")
-  not .isDocker }}
+  (not (eq .daemonManager "systemd"))
+  (not .isDocker) }}
 # workaround: https://stackoverflow.com/questions/60549775/device-or-resource-busy-when-i-try-move-etc-resolv-conf-in-ubuntu18-04-how
 
 file_tmp=$(mktemp)
