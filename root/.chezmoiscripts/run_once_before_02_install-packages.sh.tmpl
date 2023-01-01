@@ -3,10 +3,10 @@
 set -eu
 
 {{- $repositorySpecific := dict
-  "apt"     (cat "xz-utils")
-  "yum"     (cat "xz")
-  "dnf"     (cat "xz")
-  "apk"     (cat "xz")
+  "apt" "xz-utils passwd"
+  "yum" "xz passwd"
+  "dnf" "xz passwd"
+  "apk" "xz shadow"
 -}}
 
 {{- $requestPackages := cat
