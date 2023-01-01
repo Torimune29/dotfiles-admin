@@ -41,7 +41,7 @@ sudo gpasswd -a $USER docker
   (eq .daemonManager "systemd")
   .isWsl }}
 sudo sed -i.bak "/DNS=/d" /etc/systemd/resolved.conf
-sudo tee -a /etc/systemd/resolve.conf << EOF > /dev/null
+sudo tee -a /etc/systemd/resolved.conf << EOF > /dev/null
 DNS={{ .publicDnsPrimary }} {{ .publicDnsSecondary }}
 EOF
 {{ else if and
