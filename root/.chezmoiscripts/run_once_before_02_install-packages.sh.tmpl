@@ -35,13 +35,3 @@ sudo gpasswd -a $USER docker
 {{ else if contains "rhel" .distIdLike }}
 {{   template "sudo" cat .install "podman" }}
 {{ end }}
-
-
-    #   /etc/resolv.conf
-if [ -f /etc/resolv.conf ]; then
-  sudo sed -i.bak "/nameserver/d" /etc/resolv.conf
-  sudo tee -a /etc/resolv.conf <<EOF
-nameserver  {{ .publicDnsPrimary }}
-nameserver  {{ .publicDnsSecondary }}
-EOF
-fi
