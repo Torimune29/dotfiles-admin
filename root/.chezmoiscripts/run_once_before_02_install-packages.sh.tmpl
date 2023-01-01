@@ -23,7 +23,7 @@ set -eu
 
 {{ template "sudo" cat .install $requestPackages }}
 
-{{ if not (contains "alpine" .distId) }}
+{{ if or (contains "ubuntu" .distId) (contains "debian" .distId) }}
 # docker
 TMPFILE=$(mktemp)
 curl -fsSL https://get.docker.com -o $TMPFILE
@@ -32,6 +32,8 @@ rm $TMPFILE
 {{   if eq (env "USER") "" | not }}
 sudo gpasswd -a $USER docker
 {{   end }}
+{{ else if contains "rhel" .distIdLike }}
+{{   template "sudo" cat .install "podman" }}
 {{ end }}
 
 # nixpkg
