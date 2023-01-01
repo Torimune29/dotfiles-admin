@@ -3,9 +3,9 @@
 set -eu
 
 {{- $repositorySpecific := dict
-  "apt"     (cat "procps")
-  "yum"     (cat "procps-ng")
-  "dnf"     (cat "procps-ng")
+  "apt"     (cat "xz-utils")
+  "yum"     (cat "xz")
+  "dnf"     (cat "xz")
 -}}
 
 {{- $requestPackages := cat
@@ -15,10 +15,8 @@ set -eu
   "bash"
   "bash-completion"
   "sudo"
-  "python3"
-  "gcc"
   "tar"
-  "file"
+  "python3"
   (get $repositorySpecific .packageManager)
 -}}
 
@@ -28,10 +26,11 @@ set -eu
   (contains "debian" .distId)
   (contains "debian" .distIdLike)
   (contains "rhel" .distIdLike) }}
-# homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-brew doctor
+
+curl -L -o nix_install.sh https://nixos.org/nix/install
+sh nix_install.sh --daemon
+rm nix_install.sh
+
 {{ else }}
   {{ fail (cat .distId "is unsupported.") }}
 {{ end }}
