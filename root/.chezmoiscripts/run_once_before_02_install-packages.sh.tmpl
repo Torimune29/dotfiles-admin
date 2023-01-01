@@ -36,7 +36,3 @@ sudo gpasswd -a $USER docker
 {{   template "sudo" cat .install "podman" }}
 {{ end }}
 
-# nixpkg
-curl -L -o nix_install.sh https://nixos.org/nix/install
-sh nix_install.sh --daemon
-rm nix_install.sh

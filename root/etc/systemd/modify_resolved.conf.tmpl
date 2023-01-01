@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -eu
+
+{{ if eq .daemonManager "systemd" }}
+
+file_tmp=$(mktemp)
+cat /dev/stdin \
+  | sed '/DNS=/d'
+  > $file_tmp
+echo "DNS={{ .publicDnsPrimary }} {{ .publicDnsSecondary }}" >> file_tmp
+
+cat $file_tmp
+rm -rf $file_tmp
+
+{{ end }}

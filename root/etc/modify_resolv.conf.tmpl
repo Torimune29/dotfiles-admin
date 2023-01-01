@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -eu
+
+{{ if not (eq .daemonManager "systemd") }}
+
+file_tmp=$(mktemp)
+cat /dev/stdin \
+  | sed '/nameserver/d'
+  > $file_tmp
+cat <<EOF >> $file_tmp
+nameserver {{ .publicDnsPrimary }}
+nameserver {{ .publicDnsSecondary }}
+EOF
+
+cat $file_tmp
+rm -rf $file_tmp
+
+{{ end }}
