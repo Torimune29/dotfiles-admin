@@ -23,6 +23,18 @@ set -eu
 
 {{ template "sudo" cat .install $requestPackages }}
 
+{{ if not (contains "alpine" .distId) }}
+# docker
+TMPFILE=$(mktemp)
+curl -fsSL https://get.docker.com -o $TMPFILE
+sh $TMPFILE
+rm $TMPFILE
+{{   if eq (env "USER") "" | not }}
+sudo gpasswd -a $USER docker
+{{   end }}
+{{ end }}
+
+# nixpkg
 curl -L -o nix_install.sh https://nixos.org/nix/install
 sh nix_install.sh --daemon
 rm nix_install.sh
