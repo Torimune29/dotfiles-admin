@@ -2,7 +2,7 @@
 
 set -eu
 
-{{ if and .requestDocker (eq .daemonManager "systemd") }}
+{{ if eq .daemonManager "systemd" }}
 cat <<EOF
 [Service]
 EnvironmentFile=-/etc/systemd/system/docker.service.d/docker-proxy

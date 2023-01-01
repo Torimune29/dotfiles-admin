@@ -3,7 +3,7 @@
 set -eu
 
 # see: https://docs.docker.jp/config/daemon/systemd.html#http-https
-{{ if and .requestDocker (eq .daemonManager "systemd") .underProxy }}
+{{ if and (eq .daemonManager "systemd") .underProxy }}
 cat <<EOF
 HTTP_PROXY={{ .proxyHttp }}
 HTTPS_PROXY={{ .proxyHttps }}

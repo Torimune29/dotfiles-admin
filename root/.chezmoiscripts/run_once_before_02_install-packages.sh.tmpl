@@ -3,18 +3,35 @@
 set -eu
 
 {{- $repositorySpecific := dict
-  "apt"     (cat "")
-  "yum"     (cat "")
-  "dnf"     (cat "")
-  "zypper"  (cat "")
-  "apk"     (cat "")
+  "apt"     (cat "procps")
+  "yum"     (cat "procps-ng")
+  "dnf"     (cat "procps-ng")
 -}}
 
 {{- $requestPackages := cat
   "git"
   "curl"
   "ca-certificates"
+  "bash"
+  "bash-completion"
+  "sudo"
+  "python3"
+  "gcc"
+  "tar"
+  "file"
   (get $repositorySpecific .packageManager)
 -}}
 
 {{ template "sudo" cat .install $requestPackages }}
+
+{{ if or
+  (contains "debian" .distId)
+  (contains "debian" .distIdLike)
+  (contains "rhel" .distIdLike) }}
+# homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+brew doctor
+{{ else }}
+  {{ fail (cat .distId "is unsupported.") }}
+{{ end }}

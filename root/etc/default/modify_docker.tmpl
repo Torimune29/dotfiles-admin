@@ -2,7 +2,7 @@
 
 set -eu
 
-{{ if and .requestDocker (eq .daemonManager "sysvinit-like") }}
+{{ if eq .daemonManager "sysvinit-like" }}
 
 file_tmp=$(mktemp)
 cat /dev/stdin \

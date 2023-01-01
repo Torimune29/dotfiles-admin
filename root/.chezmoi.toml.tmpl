@@ -7,14 +7,6 @@
 {{- $exitCode := 128 }}
 
 {{- /* User request */ -}}
-{{- $installDevelopmentEssentials := false -}}
-{{- $installServerEssentials := false -}}
-{{- $installDocker := false -}}
-{{- $adminUserName := "admin" -}}
-{{- $adminPassword := randAlphaNum 12 -}}
-{{- $adminGroup := "wheel" -}}
-
-{{- $clean := false -}}
 
 {{- /* Proxy */ -}}
 {{- $underProxy := false -}}
@@ -24,18 +16,6 @@
 {{- $proxyNo := "" -}}
 
 {{- if $interactive -}}
-{{-   $installDevelopmentEssentials = promptBool "Install development essentials" $installDevelopmentEssentials -}}
-
-{{-   $installServerEssentials = promptBool "Install server essentials" $installServerEssentials -}}
-{{-   if $installServerEssentials -}}
-{{-     $adminUserName = promptString "Admin User Name" $adminUserName -}}
-{{-     $adminPassword = promptString "Admin User Password" $adminPassword -}}
-{{-     $adminGroup = promptString "Admin Group" $adminGroup -}}
-{{-     writeToStdout (printf "Set Admin Info as \n'Admin User Name:%s'\n'Admin Password:%s'\n'Admin Group:%s'\n'" $adminUserName $adminPassword $adminGroup) -}}
-{{-   end -}}
-
-{{-   $installDocker = promptBool "Install dockerd" $installDocker -}}
-
 {{-   $underProxy = promptBool "Under Proxy" $underProxy -}}
 {{-   if $underProxy -}}
 {{-     if promptBool "Has HTTP Proxy" false -}}
@@ -124,13 +104,3 @@ destDir = "/"
   install = "pacman -S"
   update = "pacman -gSyy"
   {{ end -}}
-
-  # request facts
-  requestDocker = {{ $installDocker }}
-  requestInteractiveEssentials = {{ or $installDevelopmentEssentials $installServerEssentials }}
-  requestDevelopmentEssentials = {{ $installDevelopmentEssentials }}
-
-  requestServerEssentials = {{ $installServerEssentials }}
-  requestServerAdminUserName = {{ $adminUserName | quote }}
-  requestServerAdminPassword = {{ $adminPassword | quote }}
-  requestServerAdminGroup = {{ $adminGroup | quote }}

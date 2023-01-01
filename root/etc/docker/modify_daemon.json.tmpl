@@ -2,7 +2,6 @@
 
 set -eu
 
-{{ if and .requestDocker (eq .daemonManager "" | not) }}
 cat <<EOF
 {
   "containerd": "/run/containerd/containerd.sock",
@@ -13,6 +12,4 @@ cat <<EOF
   "hosts": ["fd://", "unix:///var/run/docker.sock", "tcp://0.0.0.0:2375"]
 }
 EOF
-{{ end }}
-
 
