@@ -35,3 +35,20 @@ sudo gpasswd -a $USER docker
 {{ else if contains "rhel" .distIdLike }}
 {{   template "sudo" cat .install "podman" }}
 {{ end }}
+
+# DNS
+{{ if or
+  (eq .daemonManager "systemd")
+  .isWsl }}
+sudo sed -i.bak "/DNS=/d" /etc/systemd/resolved.conf
+echo "DNS={{ .publicDnsPrimary }} {{ .publicDnsSecondary }}" | sudo tee -a /etc/systemd/resolve.conf > /dev/null
+{{ end }}
+{{ if and
+  (not (eq .daemonManager "systemd"))
+  (not .isDocker) }}
+sudo sed -i.bak "/nameserver/d" /etc/resolv.conf
+sudo tee -a /etc/resolv.conf <<EOF
+nameserver ${PUBLIC_DNS_PRIMARY}
+nameserver ${PUBLIC_DNS_SECONDARY}
+EOF
+{{ end }}
