@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Run Test
         run: |
-          curl --silent https://raw.githubusercontent.com/Torimune29/dotfiles-admin/main/bootstrap.sh | sudo sh
+          curl --silent https://raw.githubusercontent.com/Torimune29/dotfiles-admin/main/bootstrap.sh | sh
 
   docker:
     runs-on: ubuntu-latest
