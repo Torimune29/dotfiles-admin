@@ -4,8 +4,6 @@ set -eu
 
 {{ if .isWsl }}
 cat <<EOF
-[network]
-generateResolvConf = false
 [boot]
 systemd = true
 EOF
