@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Run Test
         run: |
-          curl --silent https://raw.githubusercontent.com/Torimune29/dotfiles-admin/main/bootstrap.sh | sh
+          curl --silent https://raw.githubusercontent.com/Torimune29/dotfiles-admin/main/bootstrap.sh | sudo sh
 
   docker:
     runs-on: ubuntu-latest
@@ -27,13 +27,13 @@ jobs:
       matrix:
         docker:
         - "ubuntu:latest"
-        # - "ubuntu:14.04"
+        - "ubuntu:14.04"
         - "almalinux:minimal"
         - "almalinux:latest"
         - "debian:stable-slim"
         - "public.ecr.aws/amazonlinux/amazonlinux:latest"
         - "mcr.microsoft.com/vscode/devcontainers/base:latest"
-        # - "alpine:latest"
+        - "alpine:latest"
         # - "archlinux:latest"
     steps:
       - name: Checkout Code

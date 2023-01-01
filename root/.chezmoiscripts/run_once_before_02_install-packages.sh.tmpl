@@ -6,6 +6,7 @@ set -eu
   "apt"     (cat "xz-utils")
   "yum"     (cat "xz")
   "dnf"     (cat "xz")
+  "apk"     (cat "xz")
 -}}
 
 {{- $requestPackages := cat
@@ -22,15 +23,6 @@ set -eu
 
 {{ template "sudo" cat .install $requestPackages }}
 
-{{ if or
-  (contains "debian" .distId)
-  (contains "debian" .distIdLike)
-  (contains "rhel" .distIdLike) }}
-
 curl -L -o nix_install.sh https://nixos.org/nix/install
 sh nix_install.sh --daemon
 rm nix_install.sh
-
-{{ else }}
-  {{ fail (cat .distId "is unsupported.") }}
-{{ end }}
