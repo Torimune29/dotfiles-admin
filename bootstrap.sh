@@ -68,8 +68,11 @@ $ sh -c "\$(curl -L https://nixos.org/nix/install)" -- --daemon
 #################################################################
 EOF
 else
-[ is_docker ] && su -s /bin/bash dockeruser
-sh -c "$(curl -L https://nixos.org/nix/install)" -- --daemon
+  if is_docker; then
+    sudo -u dockeruser sh -c "$(curl -L https://nixos.org/nix/install)" -- --daemon
+  else
+    sh -c "$(curl -L https://nixos.org/nix/install)" -- --daemon
+  fi
 fi
 
 echo "init script finished"
