@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -eu
+
+# nixpkg
+{{ if and
+  .isWsl
+  (not .isDocker) }}
+exit 0
+{{ end }}
+
+bash -l -c "$(cat <<EOF
+set -euo pipefail
+nix doctor
+nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.11.tar.gz home-manager
+nix-channel --update
+nix-shell '<home-manager>' -A install
+EOF
+)"
+

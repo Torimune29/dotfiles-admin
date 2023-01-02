@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Run Test
         run: |
-          sh <(curl -L https://raw.githubusercontent.com/Torimune29/dotfiles-admin/main/bootstrap.sh)
+          sh -c "$(curl -L https://raw.githubusercontent.com/Torimune29/dotfiles-admin/main/bootstrap.sh)"
 
   docker:
     runs-on: ubuntu-latest
