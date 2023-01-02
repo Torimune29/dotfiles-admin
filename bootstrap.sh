@@ -59,6 +59,7 @@ sudo sh -c "$(curl -fsLSk https://chezmoi.io/get)" -- init --apply --destination
 # nixpkg
 # if doker, use nixos/nix image
 if ! is_docker; then
+  # if wsl, should use nixos-wsl
   if is_wsl; then
     cat <<EOF
 #################################################################
@@ -70,7 +71,7 @@ $ sh -c "\$(curl -L https://nixos.org/nix/install)" -- --daemon
 #################################################################
 EOF
   else
-    sh <(curl -L https://nixos.org/nix/install) --daemon
+    sh -c "$(curl -L https://nixos.org/nix/install)" -- --daemon
   fi
 fi
 
