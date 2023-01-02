@@ -57,7 +57,7 @@ echo "init scripts start"
 sudo sh -c "$(curl -fsLSk https://chezmoi.io/get)" -- init --apply --destination / --source /etc/chezmoi/data --config-path /etc/chezmoi/chezmoi.config.toml "$@" https://github.com/Torimune29/dotfiles-admin.git
 
 # nixpkg
-if is_wsl; then
+if is_wsl && ! is_docker ; then
 cat <<EOF
 #################################################################
 Systemd will enable after reboot wsl.
