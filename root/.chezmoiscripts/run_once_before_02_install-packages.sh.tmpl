@@ -54,12 +54,3 @@ nameserver {{ .publicDnsSecondary }}
 EOF
 {{ end }}
 
-
-{{ if .isDocker }}
-# add user for docker
-sudo useradd -s /bin/false -m -g wheel dockeruser | true
-sudo mkdir -p /etc/sudoers.d
-sudo tee /etc/sudoers.d/90_dockeruser <<EOF > /dev/null
-dockeruser ALL=NOPASSWD: ALL
-EOF
-{{ end }}

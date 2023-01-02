@@ -57,8 +57,10 @@ echo "init scripts start"
 sudo sh -c "$(curl -fsLSk https://chezmoi.io/get)" -- init --apply --destination / --source /etc/chezmoi/data --config-path /etc/chezmoi/chezmoi.config.toml "$@" https://github.com/Torimune29/dotfiles-admin.git
 
 # nixpkg
-if is_wsl && ! is_docker ; then
-cat <<EOF
+# if doker, use nixos/nix image
+if ! is_docker; then
+  if is_wsl; then
+    cat <<EOF
 #################################################################
 Systemd will enable after reboot wsl.
 If rebooted, type this to install nixpkg:
@@ -67,9 +69,6 @@ $ sh -c "\$(curl -L https://nixos.org/nix/install)" -- --daemon
 
 #################################################################
 EOF
-else
-  if is_docker; then
-    su -s /bin/bash dockeruser -c "bash <(curl -L https://nixos.org/nix/install) --no-daemon"
   else
     bash <(curl -L https://nixos.org/nix/install) --daemon
   fi
