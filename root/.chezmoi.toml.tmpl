@@ -104,13 +104,3 @@ destDir = "/"
   install = "pacman -S"
   update = "pacman -gSyy"
   {{ end -}}
-
-  # nix
-  {{ if not (empty (env "SUDO_USER")) -}}
-  nixpkgUser = {{ env "SUDO_USER" | quote }}
-  {{ else if not (empty (env "USER")) -}}
-  nixpkgUser = {{ env "USER" | quote }}
-  {{ else -}}
-  # default
-  nixpkgUser = "nixos"
-  {{ end -}}

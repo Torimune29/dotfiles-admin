@@ -9,7 +9,7 @@ set -eu
 exit 0
 {{ end }}
 
-bash -l -c "$(cat <<EOF
+sudo bash -l -c "$(cat <<EOF
 set -euo pipefail
 nix doctor
 nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.11.tar.gz home-manager

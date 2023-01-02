@@ -7,14 +7,6 @@ set -eu
 
 mkdir -p /nix /etc/nix && chmod a+rwx /nix
 
-# add user for empty users(like alpine)
-sudo useradd -s /bin/false -m {{ .nixpkgUser }} | true
-sudo mkdir -p /etc/sudoers.d
-sudo tee /etc/sudoers.d/90_nix_{{ .nixpkgUser }} <<EOF > /dev/null
-{{ .nixpkgUser }} ALL=NOPASSWD: ALL
-Defaults env_keep += "NIX_PATH"
-EOF
-
 {{ if and
   .isWsl
   (not .isDocker) }}
@@ -36,10 +28,6 @@ bash -c "$(curl -L https://nixos.org/nix/install)" -- --daemon
 {{   if .isDocker }}
 echo 'sandbox = false' | sudo tee -a /etc/nix/nix.conf > /dev/null
 {{   end }}
-# modify permission
-# see: https://wiki.archlinux.jp/index.php/Nix
-sudo chown -R {{ .nixpkgUser }}. /nix/var/nix/gcroots
-sudo chown -R {{ .nixpkgUser }}. /nix/var/nix/profiles
 
 {{ end }}
 
