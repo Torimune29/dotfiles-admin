@@ -3,3 +3,8 @@
 # sh prompt username:hostname:path$
 
 export PS1='\u@\h:\w\$ '
+
+# for nixpkg
+# see: https://github.com/nix-community/home-manager/issues/2564
+
+export NIX_PATH=${NIX_PATH:+$NIX_PATH:}$HOME/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels
