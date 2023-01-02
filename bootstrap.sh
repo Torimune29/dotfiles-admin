@@ -20,6 +20,28 @@ get_package_management_method () {
   fi
 }
 
+is_wsl() {
+	case "$(uname -r)" in
+	*microsoft* ) true ;; # WSL 2
+	*Microsoft* ) true ;; # WSL 1
+	* ) false;;
+	esac
+}
+
+is_docker() {
+  [ -f /.dockerenv ] && true || false
+}
+
+daemon() {
+  # init
+  case "$(cat /proc/1/comm 2>/dev/null)" in
+    systemd) INIT="systemd";;
+    init) INIT="sysvinit-like" ;;
+    *) INIT="Other";;
+  esac
+  echo $INIT
+}
+
 echo "[bootstrap start]"
 echo "prerequisite package instal start"
 
@@ -35,7 +57,19 @@ echo "init scripts start"
 sudo sh -c "$(curl -fsLSk https://chezmoi.io/get)" -- init --apply --destination / --source /etc/chezmoi/data --config-path /etc/chezmoi/chezmoi.config.toml "$@" https://github.com/Torimune29/dotfiles-admin.git
 
 # nixpkg
-sh -c "$(curl -L https://nixos.org/nix/install)" --  --daemon
+if is_wsl; then
+cat <<EOF
+#################################################################
+Systemd will enable after reboot wsl.
+If rebooted, type this to install nixpkg:
+
+$ sh -c "\$(curl -L https://nixos.org/nix/install)" -- --daemon
+
+#################################################################
+EOF
+else
+sh -c "$(curl -L https://nixos.org/nix/install)" -- --daemon
+fi
 
 echo "init script finished"
 echo "[bootstrap finished]"
