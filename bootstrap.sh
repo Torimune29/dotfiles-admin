@@ -69,7 +69,7 @@ $ sh -c "\$(curl -L https://nixos.org/nix/install)" -- --daemon
 EOF
 else
   if is_docker; then
-    su -s /bin/bash dockeruser -c "bash <(curl -L https://nixos.org/nix/install) --daemon"
+    su -s /bin/bash dockeruser -c "bash <(curl -L https://nixos.org/nix/install) --no-daemon"
   else
     bash <(curl -L https://nixos.org/nix/install) --daemon
   fi
