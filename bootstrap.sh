@@ -70,7 +70,7 @@ $ sh -c "\$(curl -L https://nixos.org/nix/install)" -- --daemon
 #################################################################
 EOF
   else
-    bash <(curl -L https://nixos.org/nix/install) --daemon
+    sh <(curl -L https://nixos.org/nix/install) --daemon
   fi
 fi
 
