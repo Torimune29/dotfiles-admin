@@ -3,11 +3,7 @@
 set -eu
 
 # nixpkg
-{{ if and
-  .isWsl
-  (not .isDocker) }}
-exit 0
-{{ end }}
+{{ if stat "/etc/nix/nix.conf" }}
 
 sudo bash -l -c "$(cat <<EOF
 set -euo pipefail
@@ -18,3 +14,4 @@ nix-shell '<home-manager>' -A install
 EOF
 )"
 
+{{ end }}

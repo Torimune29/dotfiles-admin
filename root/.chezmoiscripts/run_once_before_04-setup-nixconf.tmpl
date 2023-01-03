@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+set -eu
+
+# nix conf
+{{ if stat "/etc/nix/nix.conf" }}
+echo 'experimental-features = nix-command flakes' | sudo tee -a /etc/nix/nix.conf > /dev/null
+{{   if .isDocker }}
+echo 'sandbox = false' | sudo tee -a /etc/nix/nix.conf > /dev/null
+{{   end }}
+{{ end }}
