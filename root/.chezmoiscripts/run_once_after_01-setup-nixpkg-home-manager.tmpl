@@ -13,5 +13,6 @@ nix-channel --update
 nix-shell '<home-manager>' -A install
 EOF
 )"
-
+# https://wiki.archlinux.jp/index.php/Nix
+sudo chown -R ${SUDO_USER}. /nix/var/nix/{gcroots,profiles}
 {{ end }}
