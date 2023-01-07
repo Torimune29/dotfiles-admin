@@ -3,7 +3,7 @@
 set -eu
 
 # nixpkg
-{{ if not (stat "/etc/nix/nix.conf") }}
+{{ if not (stat "/etc/nix/nix.conf" | not | not) }}
 
 mkdir -p /nix /etc/nix && chmod a+rwx /nix
 

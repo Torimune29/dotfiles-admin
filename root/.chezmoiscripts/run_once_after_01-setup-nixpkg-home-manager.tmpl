@@ -3,7 +3,7 @@
 set -eu
 
 # nixpkg
-{{ if stat "/etc/nix/nix.conf" }}
+{{ if stat "/etc/nix/nix.conf" | not | not }}
 
 sudo bash -l -c "$(cat <<EOF
 set -euo pipefail
