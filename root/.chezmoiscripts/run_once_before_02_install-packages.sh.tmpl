@@ -29,7 +29,9 @@ TMPFILE=$(mktemp)
 curl -fsSL https://get.docker.com -o $TMPFILE
 sh $TMPFILE
 rm $TMPFILE
-{{   if eq (env "USER") "" | not }}
+{{   if eq (env "SUDO_USER") "" | not }}
+sudo gpasswd -a $SUDO_USER docker
+{{   else if eq (env "USER") "" | not }}
 sudo gpasswd -a $USER docker
 {{   end }}
 {{ else if contains "rhel" .distIdLike }}
