@@ -9,7 +9,7 @@ cat <<EOF
   "default-runtime": "runc",
   "dns": ["{{ .publicDnsPrimary }}", "{{ .publicDnsSecondary }}"],
   "features": {"buildkit": true},
-  "hosts": ["fd://", "unix:///var/run/docker.sock", "tcp://0.0.0.0:2375"]
+  "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2375"]
 }
 EOF
 
