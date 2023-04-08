@@ -37,6 +37,8 @@
 
 sourceDir = "/etc/chezmoi/data"
 destDir = "/"
+# tty bug workaround: https://github.com/twpayne/chezmoi/issues/2766
+progress = {{ $interactive }}
 
 [data]
   # public DNS server
