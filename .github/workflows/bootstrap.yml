@@ -27,7 +27,7 @@ jobs:
 
       - name: Run Test
         run: |
-          script -e -c "sh -c \"$(curl -L https://raw.githubusercontent.com/Torimune29/dotfiles-admin/main/bootstrap.sh)\""
+          sh -c "$(curl -L https://raw.githubusercontent.com/Torimune29/dotfiles-admin/main/bootstrap.sh) --force"
 
   docker:
     runs-on: ubuntu-latest
