@@ -4,7 +4,6 @@ set -eux
 
 # nixpkg
 {{ if stat "/etc/nix/nix.conf" | not | not }}
-SUDO_UID=$(id -u ${SUDO_USER})
 
 bash -l -c "$(cat <<EOF
 set -euo pipefail
