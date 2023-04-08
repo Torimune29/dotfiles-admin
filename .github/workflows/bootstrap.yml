@@ -18,6 +18,13 @@ jobs:
         - ubuntu-22.04
     timeout-minutes: 10
     steps:
+      - name: Setup
+        run: |
+          # for "/run/user/$(id -u): Permission Denied" workaround
+          # https://qiita.com/hikaruna/items/154b0b1b289c1b111d9a#host%E3%81%A7permisson%E3%82%92%E8%AA%BF%E6%95%B4%E3%81%97%E3%81%9F%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%83%88%E3%83%AA%E3%82%92%E4%BD%9C%E3%81%A3%E3%81%A8%E3%81%8F
+          SUDO_UID=$(id -u ${SUDO_USER})
+          sudo mkdir -p /run/user/${SUDO_UID} && sudo chmod -R 777 /run/user/${SUDO_UID} && sudo chown -R ${SUDO_USER}: /run/user/${SUDO_UID}
+
       - name: Run Test
         run: |
           sh -c "$(curl -L https://raw.githubusercontent.com/Torimune29/dotfiles-admin/main/bootstrap.sh)"
