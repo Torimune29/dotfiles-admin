@@ -4,6 +4,10 @@ set -eu
 
 # nixpkg
 {{ if stat "/etc/nix/nix.conf" | not | not }}
+SUDO_UID=$(id -u ${SUDO_USER})
+
+# for /run/user/$(id -u)
+sudo mkdir /run/user/${SUDO_UID} && sudo chmod 700 /run/user/${SUDO_UID} && sudo chown ${SUDO_USER}: /run/user/${SUDO_UID}
 
 sudo bash -l -c "$(cat <<EOF
 set -euo pipefail
