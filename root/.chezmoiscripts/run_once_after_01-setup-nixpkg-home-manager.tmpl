@@ -6,9 +6,6 @@ set -eux
 {{ if stat "/etc/nix/nix.conf" | not | not }}
 SUDO_UID=$(id -u ${SUDO_USER})
 
-# for "/run/user/$(id -u): Permission Denied" workaround
-sudo mkdir -p /run/user/${SUDO_UID} && sudo chmod -R 700 /run/user/${SUDO_UID} && sudo chown -R ${SUDO_USER}: /run/user/${SUDO_UID}
-
 bash -l -c "$(cat <<EOF
 set -euo pipefail
 nix doctor
